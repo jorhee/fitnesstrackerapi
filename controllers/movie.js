@@ -1,47 +1,57 @@
-const Workout = require("../models/Workout");
+const Movie = require("../models/Movie");
 const {errorHandler} = require("../auth");
 const User = require("../models/User");
 
 
-module.exports.addWorkout = async (req,res) => {
+module.exports.addMovie = async (req,res) => {
 
  try {
         // Extract userId from the authenticated user
         const userId = req.user.id;
 
-        // Extract workout details from the request body
-        const { name, duration } = req.body;
-
-        // Validate required fields
-        if (!name || !duration) {
-            return res.status(400).json({
-                message: 'Name and Duration are required fields.',
+         // Fetch user details to validate admin status
+        const user = await User.findById(userId);
+        if (!user || !user.isAdmin) {
+            return res.status(403).json({
+                message: 'Access denied. Admin privileges are required.',
             });
         }
 
-        // Create a new workout instance
-        const newWorkout = new Workout({
-            name,
-            duration,
-            userId,
+        // Extract movie details from the request body
+        const { title , director, year, description, genre } = req.body;
+
+        // Validate required fields
+        if (!title || !director || !year || !description || !genre) {
+            return res.status(400).json({
+                message: 'All fields are required.',
+            });
+        }
+
+        // Create a new movie instance
+        const newMovie = new Movie({
+            title,
+            director,
+            year,
+            description,
+            genre
         });
 
         // Save the workout to the database
-        const savedWorkout = await newWorkout.save();
+        const savedMovie = await newMovie.save();
 
-        // Respond with the saved workout
-        res.status(201).json(savedWorkout);
+        // Respond with the saved movie
+        res.status(201).json(savedMovie);
     } catch (error) {
         // Handle server errors
         res.status(500).json({
-            message: 'Error adding workout.',
+            message: 'Error adding movie.',
             error: error.message,
         });
     }
 };
 
 
-module.exports.getMyWorkouts = async (req, res) => {
+module.exports.getMovies = async (req, res) => {
 
      try {
         // Get the authenticated user's ID

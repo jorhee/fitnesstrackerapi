@@ -10,7 +10,7 @@ const cors = require("cors");
 
 
 //Routes Middleware
-const workoutRoutes = require("./routes/workout");
+const movieRoutes = require("./routes/movie");
 const userRoutes = require("./routes/user");
 
 
@@ -48,7 +48,7 @@ mongoose.connection.once('open',()=>console.log("Now connected to MongoDB Atlas"
 //[Backend Routes]
 //http://localhost:4000/
 
-app.use("/workouts", workoutRoutes);
+app.use("/movies", movieRoutes);
 app.use("/users", userRoutes);
 
 //[Server Gateway Response]

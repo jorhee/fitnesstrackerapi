@@ -75,6 +75,22 @@ module.exports.verify = (req, res, next) =>{
 	}
 };
 
+//[Verify Admin]
+
+module.exports.verifyAdmin = (req,res,next)=>{
+	console.log("result from verifyAdmin method");
+	console.log(req.user);
+
+	if(req.user.isAdmin){
+		next()
+	}else{
+		return res.status(403).send({
+			auth: "Failed",
+			message: "Action Forbidden"
+		})
+	}
+}
+
 
 
 module.exports.errorHandler = (err, req, res, next) => {
