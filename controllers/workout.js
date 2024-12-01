@@ -73,6 +73,50 @@ module.exports.getMyWorkouts = async (req, res) => {
 
 };
 
+module.exports.getWorkoutById = async (req,res) => {
+
+    try {
+    // Extract workoutId from request parameters
+    const { workoutId } = req.params;
+
+    // Ensure the user is authenticated and get userId
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(401).json({
+        message: 'Unauthorized: No user ID found in request.',
+      });
+    }
+
+    // Validate workoutId
+    if (!workoutId) {
+      return res.status(400).json({
+        message: 'Workout ID is required.',
+      });
+    }
+
+    // Find the workout by workoutId and userId to ensure the workout belongs to the user
+    const workout = await Workout.findOne({ _id: workoutId, userId });
+
+    // If workout not found, return a 404 response
+    if (!workout) {
+      return res.status(404).json({
+        message: 'Workout not found or you do not have access to it.',
+      });
+    }
+
+    // Respond with the workout data
+    return res.status(200).json({
+      message: 'Workout retrieved successfully.',
+      workout,
+    });
+  } catch (error) {
+    // Handle potential server errors
+    return res.status(500).json({
+      message: 'Error retrieving workout.',
+      error: error.message,
+    });
+  }
+};
 
 
 

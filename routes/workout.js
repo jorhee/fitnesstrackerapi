@@ -11,6 +11,8 @@ router.post("/addWorkout", verify, workoutController.addWorkout);
 
 router.get("/getMyWorkouts", verify, workoutController.getMyWorkouts);
 
+router.get("/:workoutId", verify, workoutController.getWorkoutById);
+
 
 router.patch("/updateWorkout/:workoutId", verify, workoutController.updateWorkout);
 
